@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOEAZI Workcare XAI Demo</title>
+<meta name="description" content="사고 대응, 정산 미지급, 계약 전 점검 상황에서 현장직 권리 리스크를 설명하는 DOEAZI Workcare XAI 데모 화면입니다.">
+<link rel="canonical" href="https://roar-jar.github.io/jar/workcare-xai.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DOEAZI Workcare XAI Demo">
+<meta property="og:description" content="현장직 비임금근로자의 사고, 정산, 계약 리스크를 상황 중심으로 해석하는 화면 데모입니다.">
+<meta property="og:url" content="https://roar-jar.github.io/jar/workcare-xai.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="workcare-xai.css">
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <div class="hero-inner">
+      <a class="back-link" href="./index.html">← 프로필로 돌아가기</a>
+      <div class="label-tag">DOEAZI · Workcare AI</div>
+      <h1>현장직 권리 XAI</h1>
+      <p class="hero-copy">
+        사고, 정산, 계약 문제를 <strong>상황 중심</strong>으로 해석하고,
+        내부적으로는 <strong>직무 x 계약구조</strong>로 라우팅하는 MVP 화면입니다.
+      </p>
+      <div class="hero-principles">
+        <span>사건 중심 진입</span>
+        <span>법적 근거 + 모델 설명</span>
+        <span>즉시 행동 제안</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="mode-section">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">ENTRY MODES</div>
+          <h2>먼저 지금 상황을 고릅니다</h2>
+        </div>
+      </div>
+      <div class="mode-list">
+        <button class="mode-card is-active" data-mode="accident" type="button">
+          <span class="mode-step">01</span>
+          <strong>업무 중 사고 대응</strong>
+          <p>업무 관련성, 안전조치 부족, 책임 주체 후보를 빠르게 정리합니다.</p>
+        </button>
+        <button class="mode-card" data-mode="payment" type="button">
+          <span class="mode-step">02</span>
+          <strong>보수·정산 미지급</strong>
+          <p>못 받은 돈의 성격과 지급 책임 구조를 분해합니다.</p>
+        </button>
+        <button class="mode-card" data-mode="contract" type="button">
+          <span class="mode-step">03</span>
+          <strong>계약 전 리스크 점검</strong>
+          <p>해지, 책임 전가, 정산 불투명 조항을 미리 찾습니다.</p>
+        </button>
+      </div>
+    </section>
+
+    <section class="mode-section">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">DETAIL SCREENS</div>
+          <h2>모드별 전용 결과 화면</h2>
+        </div>
+        <p class="section-note">공유용 링크는 여기서 바로 열 수 있습니다.</p>
+      </div>
+      <div class="link-grid">
+        <a class="link-card" href="./workcare-xai-accident.html">
+          <strong>사고 대응 결과</strong>
+          <span>업무 관련성, 안전조치 부족, 책임 주체 후보를 전용 화면으로 봅니다.</span>
+        </a>
+        <a class="link-card" href="./workcare-xai-payment.html">
+          <strong>체불 대응 결과</strong>
+          <span>못 받은 돈의 성격, 지급 주체, 정산 통제 구조를 전용 화면으로 봅니다.</span>
+        </a>
+        <a class="link-card" href="./workcare-xai-contract.html">
+          <strong>계약 점검 결과</strong>
+          <span>해지, 책임 전가, 정산 불투명 조항을 전용 화면으로 봅니다.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="route-section">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">ROUTING</div>
+          <h2>현장 구조 라우팅</h2>
+        </div>
+        <p class="section-note">직무 x 계약구조를 뒤에서 분류합니다.</p>
+      </div>
+      <div class="route-list">
+        <button class="route-chip is-active" data-route="transport-entrusted" type="button">A3 운송·배송 x 위수탁</button>
+        <button class="route-chip" data-route="transport-subcontract" type="button">A2 운송·배송 x 협력사</button>
+        <button class="route-chip" data-route="logistics-subcontract" type="button">B2 물류·상하차 x 협력사</button>
+      </div>
+    </section>
+
+    <section class="workspace-grid">
+      <div class="stack">
+        <article class="card intro-card">
+          <div class="section-eyebrow">INPUT</div>
+          <h2 id="mode-title"></h2>
+          <p id="mode-description" class="body-copy"></p>
+        </article>
+
+        <div id="question-groups" class="question-groups"></div>
+      </div>
+
+      <div class="stack">
+        <article class="card result-top">
+          <div class="result-head">
+            <div>
+              <div class="section-eyebrow">OUTPUT</div>
+              <h2 id="summary-route"></h2>
+            </div>
+            <div class="status-stack">
+              <span class="status-pill" id="summary-mode"></span>
+              <span class="status-pill strong" id="summary-status"></span>
+            </div>
+          </div>
+          <div class="score-wrap">
+            <div>
+              <div class="score-label">핵심 판단</div>
+              <h3 id="primary-outcome"></h3>
+              <p id="secondary-outcome" class="body-copy"></p>
+            </div>
+            <div class="score-box">
+              <span>Risk</span>
+              <strong id="risk-score"></strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3>현재 상황 요약</h3>
+            <span>Case brief</span>
+          </div>
+          <div id="brief-facts" class="brief-facts"></div>
+          <p id="case-brief" class="body-copy brief-copy"></p>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3>증빙 진행도</h3>
+            <span id="evidence-progress-text">0 / 0 확보</span>
+          </div>
+          <div class="progress-bar" aria-hidden="true">
+            <div id="evidence-progress-fill" class="progress-fill"></div>
+          </div>
+          <div id="evidence-checklist" class="checklist"></div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3>왜 이렇게 나왔나</h3>
+            <span>SHAP-style</span>
+          </div>
+          <div id="impact-list" class="impact-list"></div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3>지금 먼저 할 일</h3>
+            <span>우선순위 3개</span>
+          </div>
+          <ol id="priority-list" class="ordered-list"></ol>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3>핵심 증빙</h3>
+            <span>확보 순서 기준</span>
+          </div>
+          <ul id="evidence-list" class="plain-list"></ul>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3>관련 법적 쟁점</h3>
+            <span>법령·판례 연결 준비</span>
+          </div>
+          <div id="legal-grid" class="legal-grid"></div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3>결과를 바꾸는 조건</h3>
+            <span>Counterfactual</span>
+          </div>
+          <ul id="counterfactual-list" class="plain-list"></ul>
+        </article>
+
+        <article class="card memo-card">
+          <div class="card-head">
+            <h3>상담 전에 붙여넣을 메모</h3>
+            <button id="copy-memo-button" class="copy-button" type="button">메모 복사</button>
+          </div>
+          <textarea id="case-memo" class="case-memo" readonly></textarea>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="workcare-xai.js"></script>
+</body>
+</html>
