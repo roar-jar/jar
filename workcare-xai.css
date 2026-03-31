@@ -12,6 +12,9 @@
   --text-mid: #546174;
   --border: rgba(26, 35, 64, 0.1);
   --shadow: 0 20px 40px rgba(26, 35, 64, 0.08);
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-display: "Times New Roman", Georgia, serif;
 }
 
 * {
@@ -25,7 +28,7 @@ body {
     radial-gradient(circle at top left, rgba(26, 35, 64, 0.08), transparent 20%),
     var(--paper);
   color: var(--text-dark);
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: var(--font-sans);
 }
 
 .page {
@@ -65,7 +68,7 @@ body {
 
 .hero h1 {
   margin: 14px 0 0;
-  font-family: "Noto Serif KR", serif;
+  font-family: var(--font-serif);
   font-size: 31px;
   line-height: 1.18;
 }
@@ -149,7 +152,7 @@ body {
 
 .section-head h2 {
   margin: 6px 0 0;
-  font-family: "Noto Serif KR", serif;
+  font-family: var(--font-serif);
   font-size: 21px;
   line-height: 1.4;
   color: var(--navy);
@@ -370,7 +373,7 @@ body {
 
 .score-wrap h3 {
   margin-top: 8px;
-  font-family: "Noto Serif KR", serif;
+  font-family: var(--font-serif);
   font-size: 23px;
   line-height: 1.45;
 }
@@ -388,7 +391,7 @@ body {
 .score-box strong {
   display: block;
   margin-top: 4px;
-  font-family: "DM Serif Display", serif;
+  font-family: var(--font-display);
   font-size: 46px;
   line-height: 1;
   color: var(--coral);
@@ -400,7 +403,7 @@ body {
 
 .card-head h3 {
   font-size: 18px;
-  font-family: "Noto Serif KR", serif;
+  font-family: var(--font-serif);
 }
 
 .card-head span {
