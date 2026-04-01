@@ -18,9 +18,15 @@ const impactListEl = document.getElementById("impact-list");
 const priorityListEl = document.getElementById("priority-list");
 const evidenceListEl = document.getElementById("evidence-list");
 const legalGridEl = document.getElementById("legal-grid");
+const legalSourceMetaEl = document.getElementById("legal-source-meta");
+const legalSourceSummaryEl = document.getElementById("legal-source-summary");
+const legalSourceListEl = document.getElementById("legal-source-list");
 const counterfactualListEl = document.getElementById("counterfactual-list");
 const caseMemoEl = document.getElementById("case-memo");
 const copyMemoButtonEl = document.getElementById("copy-memo-button");
+
+let legalBundles = null;
+let legalBundleError = "";
 
 const routes = {
   "transport-entrusted": {
@@ -400,6 +406,20 @@ const state = {
   checks: {},
 };
 
+async function loadLegalBundles() {
+  try {
+    const response = await fetch("./data/workcare-legal-bundles.json", { cache: "no-cache" });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    legalBundles = await response.json();
+    legalBundleError = "";
+  } catch (error) {
+    legalBundles = null;
+    legalBundleError = error instanceof Error ? error.message : String(error);
+  }
+}
+
 function initializeValues() {
   Object.entries(modeConfigs).forEach(([modeKey, config]) => {
     state.values[modeKey] = {};
@@ -632,10 +652,95 @@ function renderLegal(items) {
   });
 }
 
+function getCurrentModeBundle() {
+  return legalBundles?.modes?.[state.mode] || null;
+}
+
+function renderLegalSources() {
+  if (!legalSourceMetaEl || !legalSourceSummaryEl || !legalSourceListEl) {
+    return;
+  }
+
+  legalSourceListEl.innerHTML = "";
+
+  if (legalBundleError) {
+    legalSourceMetaEl.textContent = "정적 근거 로드 실패";
+    legalSourceSummaryEl.textContent = "법령 번들을 읽지 못했습니다. 배포된 data 파일 경로를 확인해야 합니다.";
+
+    const message = document.createElement("p");
+    message.className = "source-empty";
+    message.textContent = legalBundleError;
+    legalSourceListEl.appendChild(message);
+    return;
+  }
+
+  if (!legalBundles) {
+    legalSourceMetaEl.textContent = "사전 생성 데이터 로딩 중";
+    legalSourceSummaryEl.textContent = "법제처 Open API로 생성한 근거 데이터를 불러오고 있습니다.";
+    return;
+  }
+
+  const modeBundle = getCurrentModeBundle();
+  if (!modeBundle) {
+    legalSourceMetaEl.textContent = "실근거 없음";
+    legalSourceSummaryEl.textContent = "현재 모드에 연결된 정적 근거 데이터가 아직 없습니다.";
+    return;
+  }
+
+  const generatedAt = legalBundles.generatedAt ? legalBundles.generatedAt.slice(0, 10) : "";
+  const provider = legalBundles.source?.provider || "법제처 API";
+  legalSourceMetaEl.textContent = generatedAt ? `${provider} 기준 ${generatedAt}` : provider;
+  legalSourceSummaryEl.textContent = `${modeBundle.summary} ${modeBundle.caution}`;
+
+  modeBundle.laws.forEach((item) => {
+    const card = document.createElement("article");
+    card.className = "source-card";
+
+    const head = document.createElement("div");
+    head.className = "source-card-head";
+
+    const titleBlock = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = `${item.lawName} ${item.articleTitle}`;
+    titleBlock.appendChild(title);
+
+    const reason = document.createElement("p");
+    reason.className = "source-reason";
+    reason.textContent = `왜 중요하나: ${item.why}`;
+    titleBlock.appendChild(reason);
+    head.appendChild(titleBlock);
+
+    const meta = document.createElement("span");
+    meta.textContent = `${item.lawType}\n시행 ${item.effectiveDate || "N/A"}`;
+    head.appendChild(meta);
+    card.appendChild(head);
+
+    const snippet = document.createElement("p");
+    snippet.className = "source-snippet";
+    snippet.textContent = `핵심 문구: ${item.snippet}`;
+    card.appendChild(snippet);
+
+    const details = document.createElement("details");
+    details.className = "source-details";
+    const summary = document.createElement("summary");
+    summary.textContent = "전문 보기";
+    details.appendChild(summary);
+
+    const body = document.createElement("p");
+    body.className = "source-fulltext";
+    body.textContent = item.body;
+    details.appendChild(body);
+    card.appendChild(details);
+
+    legalSourceListEl.appendChild(card);
+  });
+}
+
 function buildCaseMemo(result) {
   const route = routes[state.route];
   const modeConfig = modeConfigs[state.mode];
   const selectedLines = [];
+  const modeBundle = getCurrentModeBundle();
 
   modeConfig.groups.forEach((group) => {
     group.fields.forEach((field) => {
@@ -661,6 +766,11 @@ function buildCaseMemo(result) {
     "",
     "[법적 쟁점]",
     ...modeConfig.legal.map((item) => `- ${item.title}: ${item.text}`),
+    ...(modeBundle ? [
+      "",
+      "[참고 법령]",
+      ...modeBundle.laws.map((item) => `- ${item.lawName} ${item.articleTitle} (시행 ${item.effectiveDate || "N/A"})`),
+    ] : []),
   ].join("\n");
 }
 
@@ -684,6 +794,7 @@ function renderResult() {
   renderList(priorityListEl, modeConfig.priorities);
   renderList(evidenceListEl, modeConfig.evidence);
   renderLegal(modeConfig.legal);
+  renderLegalSources();
   renderList(counterfactualListEl, modeConfig.counterfactuals);
   caseMemoEl.value = buildCaseMemo(result);
 }
@@ -743,3 +854,6 @@ if (copyMemoButtonEl && caseMemoEl) {
 initializeValues();
 renderQuestionGroups();
 renderResult();
+loadLegalBundles().then(() => {
+  renderResult();
+});

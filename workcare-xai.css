@@ -568,6 +568,73 @@ body {
   line-height: 1.7;
 }
 
+.source-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.source-card {
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(26, 35, 64, 0.04);
+  border: 1px solid rgba(26, 35, 64, 0.07);
+}
+
+.source-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.source-card-head strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--navy);
+}
+
+.source-card-head span {
+  flex-shrink: 0;
+  color: var(--text-mid);
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: right;
+  white-space: pre-line;
+}
+
+.source-reason,
+.source-snippet,
+.source-fulltext,
+.source-empty {
+  margin: 8px 0 0;
+  color: var(--text-mid);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.source-label {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.source-details {
+  margin-top: 10px;
+}
+
+.source-details summary {
+  cursor: pointer;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.source-fulltext {
+  margin-top: 10px;
+  white-space: pre-wrap;
+}
+
 .memo-card {
   padding-bottom: 16px;
 }

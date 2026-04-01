@@ -1,6 +1,6 @@
 # DOEAZI Profile Site
 
-정아람 소개 페이지를 GitHub Pages에 올릴 수 있도록 정리한 정적 사이트입니다.
+정아람 소개 페이지와 `Workcare XAI` 데모를 GitHub Pages에 올릴 수 있도록 정리한 정적 사이트입니다.
 
 ## 포함 파일
 
@@ -9,8 +9,46 @@
 - `workcare-xai-accident.html`: 사고 대응 전용 결과 페이지
 - `workcare-xai-payment.html`: 체불 대응 전용 결과 페이지
 - `workcare-xai-contract.html`: 계약 점검 전용 결과 페이지
+- `workcare-xai.js`: 공통 질문/결과 로직 및 정적 법령 근거 로더
+- `workcare-xai.css`: 공통 스타일
+- `data/workcare-legal-bundles.json`: 법제처 Open API 응답을 사전 생성한 정적 법령 번들
+- `scripts/generate-workcare-legal-data.mjs`: 법령 번들을 다시 생성하는 스크립트
 - `_headers`: Cloudflare Pages용 보안 헤더 및 검색엔진 비노출 설정
 - `.nojekyll`: GitHub Pages에서 Jekyll 처리 없이 정적 파일 그대로 배포
+
+## 법령 근거 데이터 갱신
+
+`Workcare XAI` 화면의 `실제 법령 근거` 카드는 브라우저에서 직접 법제처 Open API를 호출하지 않습니다.
+승인된 API 키로 로컬에서 JSON 번들을 생성한 뒤, 그 정적 파일을 GitHub Pages에 함께 배포하는 방식입니다.
+
+### 사전 조건
+
+- `korean-law-mcp`가 전역 설치되어 있어야 합니다.
+- 승인된 법제처 Open API 인증값이 있어야 합니다.
+
+### 생성 방법
+
+환경변수를 쓰는 경우:
+
+```bash
+export LAW_OC='승인된_인증값'
+node scripts/generate-workcare-legal-data.mjs
+```
+
+인자를 직접 넘기는 경우:
+
+```bash
+node scripts/generate-workcare-legal-data.mjs '승인된_인증값'
+```
+
+생성이 끝나면 `data/workcare-legal-bundles.json`이 갱신됩니다.
+현재 번들은 아래 3개 모드를 대상으로 생성됩니다.
+
+- `accident`: 업무 중 사고 대응
+- `payment`: 보수·정산 미지급
+- `contract`: 계약 전 리스크 점검
+
+이 구조를 쓰면 API 키가 프론트엔드 코드나 GitHub Pages 응답에 노출되지 않습니다.
 
 ## 배포 방법
 
